@@ -18,16 +18,13 @@ class Pde():
 
 
     def getLoss(self, model, x):
-        #xz = torch.cat([x, z], dim=1)
-        #w, phix, phiy, w_x, w_y, phix_x, phiy_y, phix_y, phiy_x = model(x,y).split(1, dim=1)
         phi, w, mxx, qx = model(x).split(1, dim=1)
 
         phi_x_t = gradient(phi, x)
         w_x_t = gradient(w, x)
         mxx_target = -self.IE * gradient(phi, x)
         qx_target = self.kAG * (-phi + gradient(w, x))
-        q = -1.0#/len(x)
-
+        q = -1.0
 
 
         derivloss = self.criterion(mxx, mxx_target) +\
