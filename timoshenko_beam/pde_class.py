@@ -5,13 +5,13 @@ from helper_functions import gradient
 class Pde():
     def __init__(self, E, nu=0.3, h=0.1, k=5/6, q=1.0):
         I = (h**3)/12
-        print(I)
         G = E/(2*(1+nu))
         A = h
         self.IE = I * E
         self.kAG = k * A * G
-        self.criterion = nn.MSELoss()
         self.q = q
+
+        self.criterion = nn.MSELoss()
 
     def getDerivs(self, w, phi, x):
         dphi_dx = gradient(phi, x)
@@ -21,8 +21,8 @@ class Pde():
     def getLoss(self, model, x):
         phi, w, mxx, qx = model(x).split(1, dim=1)
 
-        phi_x_t = gradient(phi, x)
-        w_x_t = gradient(w, x)
+        #phi_x_t = gradient(phi, x)
+        #w_x_t = gradient(w, x)
         mxx_target = -self.IE * gradient(phi, x)
         qx_target = self.kAG * (-phi + gradient(w, x))
     
