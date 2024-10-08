@@ -29,19 +29,15 @@ def laplace(y, x):
     return divergence(grad, x)
 
 
-def plot_loss(model, L=1.0, U=1.0):
+def plot_loss(model):
     with torch.no_grad():
-
         x = torch.linspace(-1.0, 1.0, steps=100) / 2
         x = x.unsqueeze(1)
-
         _, w, _, _ = model(x).split(1, dim=1)
         
         plt.plot(x, w)
         plt.xlabel("length (m)")
         plt.ylabel("displacement (m)")
-        plt.colorbar().set_label('w (m)')
-        #plt.colorbar()
         plt.show()
 
 

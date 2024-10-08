@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from helper_functions.helper_functions import gradient
+from helper_functions import gradient
 
 class Pde():
     def __init__(self, E, nu=0.3, h=0.1, k=5/6):
