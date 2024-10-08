@@ -27,7 +27,7 @@ class PINN(nn.Module):
     def forward(self, xy):
 
         self.timer += 1
-        dist = ((xy[:,0:1] - 0.5) * (xy[:,0:1] + 0.5))
+        dist = ((xy[:,0:1] + 0.5) * (xy[:,0:1] - 0.5))
 
         for i in range(len(self.layers) - 1):
             xy = torch.tanh(self.layers[i](xy))
