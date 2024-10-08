@@ -26,3 +26,28 @@ def divergence(y, x):
 def laplace(y, x):
     grad = gradient(y, x)
     return divergence(grad, x)
+
+
+def plot_loss(model, L=1.0, U=1.0):
+    with torch.no_grad():
+
+        x = torch.linspace(-1.0, 1.0, steps=100) / 2
+        x = x.unsqueeze(1)
+
+        _, w, _, _ = model(x).split(1, dim=1)
+        #fem =  0.00252
+        #max = np.abs(solution_w).max()
+        #rel_diff = (np.abs(max - fem) / fem)*100
+        #print(f'max w: {max}, fem: {fem}, Relative Difference: {rel_diff}')
+        plt.plot(x, w)
+        #plt.xlabel("length (m)")
+        #plt.ylabel("width (m)")
+        #plt.colorbar().set_label('w (m)')
+        #plt.colorbar()
+        plt.show()
+
+
+def getData(num_points, grad=False):
+    x = torch.linspace(-1.0, 1.0, steps=num_points) / 2
+    x = x.unsqueeze(1)
+    return x.requires_grad_(grad)
