@@ -1,22 +1,16 @@
 import torch
 import torch.nn as nn
-from helper_functions import gradient, laplace
 
 class Pde():
     """
     This class defines the parameters and physical properties needed to compute the governing 
-    equations and derivatives for the Timoshenko beam bending problem. It encapsulates the 
-    material properties (Young's modulus, Poisson's ratio), geometric properties (beam height, 
-    length), and loading conditions (applied load, shear correction factor) required to compute 
-    the bending and shear deformations according to Timoshenko beam theory.
+    equations and derivatives for the Timoshenko beam bending problem. 
 
     Attributes:
     -----------
     IE : float
         Flexural rigidity of the beam, calculated as the product of the moment of inertia (I) 
         and Young's modulus (E).
-    D : float
-        Flexural rigidity factor for the plane stress condition, adjusted for Poisson's ratio (nu).
     kAG : float
         Shear stiffness, calculated using the shear correction factor (k), cross-sectional area (A),
         and shear modulus (G).
@@ -38,9 +32,6 @@ class Pde():
 
         self.criterion = nn.MSELoss()
 
-    def getDerivs(self, w, phi, x):
-        dphi_dx = gradient(phi, x)
-        return dphi_dx
     
     def get_w(self, x):
         P = self.q
@@ -59,20 +50,18 @@ class Pde():
 
 
     def getLoss(self, model, x):
-        q, w, mxx, qx = model(x).split(1, dim=1)
+        q, w = model(x).split(1, dim=1)
 
-        #phi_x_t = gradient(phi, x)
-        w_xx = laplace(w, x)
-        w_xxxx = laplace(w_xx, x)
-        q_xx = laplace(q ,x)
+        # Compute derivatives
+        w_x = torch.autograd.grad(w, x, grad_outputs=torch.ones_like(w), create_graph=True)[0]
+        w_xx = torch.autograd.grad(w_x, x, grad_outputs=torch.ones_like(w_x), create_graph=True)[0]
+        w_xxx = torch.autograd.grad(w_xx, x, grad_outputs=torch.ones_like(w_xx), create_graph=True)[0]
+        w_xxxx = torch.autograd.grad(w_xxx, x, grad_outputs=torch.ones_like(w_xxx), create_graph=True)[0]
 
-        #mxx_target = -self.IE * gradient(phi, x)
-        #qx_target = self.kAG * (-phi + gradient(w, x))
+        q_x = torch.autograd.grad(q, x, grad_outputs=torch.ones_like(q), create_graph=True)[0]
+        q_xx = torch.autograd.grad(q_x, x, grad_outputs=torch.ones_like(q_x), create_graph=True)[0]
     
         eq = self.EI * w_xxxx - self.q + (self.EI/self.kAG)*q_xx
-        
-        #mxx_x = gradient(mxx,x)
-        #qx_x= gradient(qx, x)
 
 
         resloss = self.criterion(eq, torch.zeros_like(eq))

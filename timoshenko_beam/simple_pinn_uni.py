@@ -14,17 +14,11 @@ class PINN(nn.Module):
         The mean squared error loss function used to train the network.
     optimizer : torch.optim.Adam
         Adam optimizer used for gradient-based optimization during training.
-    scheduler : torch.optim.lr_scheduler.ReduceLROnPlateau
-        A learning rate scheduler that reduces the learning rate when the loss plateaus.
     device : str
         The device on which the model is trained, either 'cuda' (if GPU is available) or 'cpu'.
-    timer : float
-        A timer to track the training duration.
 
     Methods:
     --------
-    init_weights:
-        Initializes the weights of the network layers using a uniform distribution.
     forward:
         Defines the forward pass of the neural network, computing the output based on the input data.
     """
@@ -61,7 +55,7 @@ class PINN(nn.Module):
         xy = self.layers[-1](xy)
 
         # displacements
-        q, w, mxx_x, qx_x = xy.split(1, dim=1)
+        q, w = xy.split(1, dim=1)
 
         # Concatenate along the last dimension
-        return torch.cat([q, w, mxx_x, qx_x], dim=1)
+        return torch.cat([q, w], dim=1)

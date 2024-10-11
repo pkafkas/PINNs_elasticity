@@ -1,28 +1,12 @@
 import torch
 import matplotlib.pyplot as plt
 
-def gradient(y, x, grad_outputs=None):
-    if grad_outputs is None:
-        grad_outputs = torch.ones_like(y)
-    grad = torch.autograd.grad(y, [x], grad_outputs = grad_outputs, create_graph=True)[0]
-    return grad
-
-def divergence(y, x):
-    div = 0.
-    for i in range(y.shape[-1]):
-        div += torch.autograd.grad(y[..., i], x, torch.ones_like(y[..., i]), create_graph=True)[0][..., i:i+1]
-    return div
-
-def laplace(y, x):
-    grad = gradient(y, x)
-    return divergence(grad, x)
-
 
 def plot_loss(model, eq):
     with torch.no_grad():
         x = torch.linspace(-1.0, 1.0, steps=100) / 2
         x = x.unsqueeze(1)
-        _, w, _, _ = model(x).split(1, dim=1)
+        _, w = model(x).split(1, dim=1)
         
         plt.plot(x, w)
         plt.xlabel("length (m)")
