@@ -2,23 +2,15 @@ import torch
 import torch.nn as nn
 
 class Pde():
-    """
-    This class defines the parameters and physical properties needed to compute the governing 
-    equations and derivatives for the Timoshenko beam bending problem. 
-
+    """ This class specifies the parameters and physical properties necessary to compute the governing equations and derivatives for the 
+    Timoshenko beam bending problem.
+    
     Attributes:
-    -----------
-    IE : float
-        Flexural rigidity of the beam, calculated as the product of the moment of inertia (I) 
-        and Young's modulus (E).
-    kAG : float
-        Shear stiffness, calculated using the shear correction factor (k), cross-sectional area (A),
-        and shear modulus (G).
-    q : float
-        Applied distributed load on the beam.
-    L : float
-        Length of the beam.
-    """
+
+    EI: A float representing the flexural rigidity of the beam, which is the product of the moment of inertia (I) and Young's modulus (E).
+    kAG: A float that denotes the shear stiffness.
+    q: A float for the applied distributed load acting on the beam.
+    L: A float that represents the length of the beam. """
 
     def __init__(self, E, nu=0.3, h=0.1, k=5/6, l=1.0, q=1.0):
         I = (h**3)/12

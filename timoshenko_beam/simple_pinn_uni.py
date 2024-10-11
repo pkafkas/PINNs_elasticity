@@ -2,25 +2,17 @@ import torch
 import torch.nn as nn
 
 class PINN(nn.Module):
-    """
-    This class defines a Physics-Informed Neural Network (PINN) for solving the Timoshenko beam bending problem.
-
+    """ This class represents a Physics-Informed Neural Network (PINN) designed to address the Timoshenko beam bending problem.
     Attributes:
-    -----------
-    layers : nn.ModuleList
-        A list of fully connected layers that define the architecture of the neural network.
-    criterion : nn.MSELoss
-        The mean squared error loss function used to train the network.
-    optimizer : torch.optim.Adam
-        Adam optimizer used for gradient-based optimization during training.
-    device : str
-        The device on which the model is trained, either 'cuda' (if GPU is available) or 'cpu'.
+
+    layers: An nn.ModuleList containing fully connected layers that structure the neural network.
+    criterion: Utilizes nn.MSELoss as the loss function.
+    optimizer: Implements the Adam optimizer (torch.optim.Adam) for optimization during the training.
+    device: Specifies the hardware for training, either 'cuda' for GPU or 'cpu'.
 
     Methods:
-    --------
-    forward:
-        Defines the forward pass of the neural network, computing the output based on the input data.
-    """
+
+    forward: Defines how the neural network computes outputs from the input data during the forward pass. """
 
     def __init__(self, layers, lr=1e-3, dist=False):
         super(PINN, self).__init__()
