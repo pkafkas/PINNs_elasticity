@@ -3,6 +3,29 @@ import torch.nn as nn
 from helper_functions import gradient
 
 class Pde():
+    """
+    This class defines the parameters and physical properties needed to compute the governing 
+    equations and derivatives for the Timoshenko beam bending problem. It encapsulates the 
+    material properties (Young's modulus, Poisson's ratio), geometric properties (beam height, 
+    length), and loading conditions (applied load, shear correction factor) required to compute 
+    the bending and shear deformations according to Timoshenko beam theory.
+
+    Attributes:
+    -----------
+    IE : float
+        Flexural rigidity of the beam, calculated as the product of the moment of inertia (I) 
+        and Young's modulus (E).
+    D : float
+        Flexural rigidity factor for the plane stress condition, adjusted for Poisson's ratio (nu).
+    kAG : float
+        Shear stiffness, calculated using the shear correction factor (k), cross-sectional area (A),
+        and shear modulus (G).
+    q : float
+        Applied distributed load on the beam.
+    L : float
+        Length of the beam.
+    """
+
     def __init__(self, E, nu=0.3, h=0.1, k=5/6, l=1.0, q=1.0):
         I = (h**3)/12
         G = E/(2*(1+nu))
