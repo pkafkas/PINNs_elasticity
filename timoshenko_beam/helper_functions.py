@@ -31,7 +31,7 @@ def plot_loss(model, eq):
 
 
 def getData(num_points, grad=False):
-    x = torch.linspace(-1.0, 1.0, steps=num_points) / 2
+    x = torch.linspace(-0.9, 0.9, steps=num_points) / 2
     x = x.unsqueeze(1)
     return x.requires_grad_(grad)
 

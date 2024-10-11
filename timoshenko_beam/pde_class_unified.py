@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from helper_functions import gradient
+from helper_functions import gradient, laplace
 
 class Pde():
     """
@@ -30,7 +30,7 @@ class Pde():
         I = (h**3)/12
         G = E/(2*(1+nu))
         A = h
-        self.IE = I * E
+        self.EI = I * E
         self.D = (E * h**3) / (12*(1-nu**2))
         self.kAG = k * A * G
         self.q = q
@@ -59,27 +59,22 @@ class Pde():
 
 
     def getLoss(self, model, x):
-        phi, w, mxx, qx = model(x).split(1, dim=1)
+        q, w, mxx, qx = model(x).split(1, dim=1)
 
         #phi_x_t = gradient(phi, x)
-        #w_x_t = gradient(w, x)
-        mxx_target = -self.IE * gradient(phi, x)
-        qx_target = self.kAG * (-phi + gradient(w, x))
+        w_xx = laplace(w, x)
+        w_xxxx = laplace(w_xx, x)
+        q_xx = laplace(q ,x)
+
+        #mxx_target = -self.IE * gradient(phi, x)
+        #qx_target = self.kAG * (-phi + gradient(w, x))
     
+        eq = self.EI * w_xxxx - self.q + (self.EI/self.kAG)*q_xx
+        
+        #mxx_x = gradient(mxx,x)
+        #qx_x= gradient(qx, x)
 
-        derivloss = self.criterion(mxx, mxx_target) +\
-                      self.criterion(qx, qx_target)
 
+        resloss = self.criterion(eq, torch.zeros_like(eq))
 
-        mxx_x = gradient(mxx,x)
-        qx_x= gradient(qx, x)
-
-        eq1 = mxx_x - qx
-        eq2 = qx_x + self.q
-
-        res1 = self.criterion(eq1, torch.zeros_like(eq1))
-        res2 = self.criterion(eq2, torch.zeros_like(eq2))
-
-        resloss = res1 + res2
-
-        return resloss, derivloss
+        return resloss

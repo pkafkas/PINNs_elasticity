@@ -55,17 +55,13 @@ class PINN(nn.Module):
     def forward(self, xy):
 
         self.timer += 1
-        dist = ((xy[:,0:1] + 0.5) * (xy[:,0:1] - 0.5))
 
         for i in range(len(self.layers) - 1):
             xy = torch.tanh(self.layers[i](xy))
         xy = self.layers[-1](xy)
 
         # displacements
-        phi, w, mxx_x, qx_x = xy.split(1, dim=1)
-        if self.dist:
-            w = w*dist
-        phi = phi
+        q, w, mxx_x, qx_x = xy.split(1, dim=1)
 
         # Concatenate along the last dimension
-        return torch.cat([phi, w, mxx_x, qx_x], dim=1)
+        return torch.cat([q, w, mxx_x, qx_x], dim=1)
