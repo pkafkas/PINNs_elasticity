@@ -3,8 +3,7 @@ import torch.nn as nn
 
 class PINN(nn.Module):
     """
-    This class defines a Physics-Informed Neural Network (PINN) for solving differential equations,
-    specifically tailored for the Timoshenko beam bending problem.
+    This class defines a Physics-Informed Neural Network (PINN) for solving the Timoshenko beam bending problem.
 
     Attributes:
     -----------
